@@ -2,41 +2,40 @@
 <html lang="en" >
 <head>
   <meta charset="UTF-8">
-  <title>ADD Item</title>
+  <title>Item Details</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-  <link rel="stylesheet" href="css/add-item.css">
-
+  <link rel="stylesheet" href="css/load-item-details.css">
 </head>
 <body>
 <!-- partial:index.partial.html -->
 <div class="container">
   <div class="text">
-    Add Item
+     Item Details
   </div>
-  <form action="/item-service/ItemController">
+  <form action="/item-service/ItemDetailsController">
     <div class="form-row">
       <div class="input-data">
-        <input type="text" required name="itemName">
+        <input type="text" required name="itemDesc" value="${itemDetailsData.description}">
         <div class="underline"></div>
-        <label>Name</label>
+        <label>Description</label>
       </div>
       <div class="input-data">
-        <input type="number" required min="1" step="1" name="itemPrice">
+        <input type="text" required name="itemBrand" value="${itemDetailsData.brand}">
         <div class="underline"></div>
-        <label>PRICE</label>
+        <label>Brand</label>
       </div>
     </div>
     <div class="form-row">
       <div class="input-data">
-        <input type="number" required min="1" step="1" name="itemTotalNumber">
+        <input type="text" required name="itemCategory" value="${itemDetailsData.category}">
         <div class="underline"></div>
-        <label>TOTAL_NUMBER</label>
+        <label>Category</label>
       </div>
-   
-   <input type="hidden" required name="action" value="add-item">
+    <input type="hidden" required name="itemId" value="${itemDetailsData.itemId}">
+   <input type="hidden" required name="action" value="update-details">
    
     </div>
-    <input type="submit" value="Add" class="button">
+    <input type="submit" value="Update Details" class="button">
   </form>
 
   <p class="back">

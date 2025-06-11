@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
 <%@ page import="com.item.model.Item" %>
+<%@ page import="java.util.Map" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,9 +27,11 @@
         <tbody>
         <% 
         List<Item> items = (List<Item>) request.getAttribute("itemsData");
+        Map<Integer, Boolean> itemDetailsMap = (Map<Integer, Boolean>) request.getAttribute("itemDetailsMap");
         %>
         <%
         for(Item item : items){
+        	 boolean hasDetails = itemDetailsMap.getOrDefault(item.getId(), false);
         %>
           <tr>
             <td><strong><%= item.getId() %></strong></td>
@@ -38,6 +41,11 @@
             <td>
                 <a href='ItemController?action=load-item&id=<%= item.getId() %>'>Update</a>
                 <a href='ItemController?action=remove-item&id=<%= item.getId() %>'>Delete</a>
+                <% if (!hasDetails) { %>
+                <a href='add-item-details.jsp?id=<%= item.getId() %>'>Add Item Details</a>
+            <% } else { %>
+                 <a href='ItemDetailsController?action=load-details&id=<%= item.getId() %>'>Show Item Details</a>
+            <% } %>
             </td>
         </tr>
         <%

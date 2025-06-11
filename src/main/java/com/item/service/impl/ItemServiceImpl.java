@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -13,6 +12,7 @@ import javax.sql.DataSource;
 
 import com.item.model.Item;
 import com.item.service.ItemService;
+import com.item.util.JdbcUtil;
 
 public class ItemServiceImpl implements ItemService{
    
@@ -29,9 +29,9 @@ public class ItemServiceImpl implements ItemService{
 	public boolean saveItem(Item item) {
 		Connection connection = null;
 	    PreparedStatement statement = null;
+	    String query = "INSERT INTO ITEM(NAME, PRICE, TOTAL_NUMBER) VALUES (?, ?, ?)"; 
 		try {
 			connection =  dataSource.getConnection();
-			String query = "INSERT INTO ITEM(NAME, PRICE, TOTAL_NUMBER) VALUES (?, ?, ?)"; 
 			statement = connection.prepareStatement(query);
 			
 			statement.setString(1, item.getName());
@@ -46,20 +46,7 @@ public class ItemServiceImpl implements ItemService{
 			System.out.println(e.getMessage());
 			return false;
 		}finally {
-	        if (statement != null) {
-	            try {
-	                statement.close();
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	        if (connection != null) {
-	            try {
-	                connection.close();
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }
-	        }
+			JdbcUtil.close(connection, statement);
 	    }
 		
 	}
@@ -68,9 +55,9 @@ public class ItemServiceImpl implements ItemService{
 	public boolean removeItem(int id) {
 		Connection connection = null;
 	    PreparedStatement statement = null;
+	    String query = "DELETE FROM ITEM WHERE ID = ?";
 		try {
 		    connection =  dataSource.getConnection();
-			String query = "DELETE FROM ITEM WHERE ID = ?";
 		    statement = connection.prepareStatement(query);
 			
 			if (Objects.isNull(loadItem(id))) {
@@ -85,20 +72,7 @@ public class ItemServiceImpl implements ItemService{
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}finally {
-	        if (statement != null) {
-	            try {
-	                statement.close();
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	        if (connection != null) {
-	            try {
-	                connection.close();
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            } 
-	        }
+			JdbcUtil.close(connection, statement);
 	    }
 		return false;
 	}
@@ -107,9 +81,10 @@ public class ItemServiceImpl implements ItemService{
 	public boolean upadteItem(Item item) {
 		Connection connection = null;
 	    PreparedStatement statement = null;
+	    String query = "UPDATE ITEM SET NAME = ?, PRICE = ?, TOTAL_NUMBER = ? WHERE ID = ?";
 		try {
 		    connection =  dataSource.getConnection();
-			String query = "UPDATE ITEM SET NAME = ?, PRICE = ?, TOTAL_NUMBER = ? WHERE ID = ?";
+			
 		    statement = connection.prepareStatement(query);
 			
 			 statement.setString(1, item.getName());
@@ -125,20 +100,7 @@ public class ItemServiceImpl implements ItemService{
 			System.out.println(e.getMessage());
 			return false;
 		}finally {
-	        if (statement != null) {
-	            try {
-	                statement.close();
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	        if (connection != null) {
-	            try {
-	                connection.close();
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            } 
-	        }
+			JdbcUtil.close(connection, statement);
 	    }
 	}
 
@@ -146,14 +108,16 @@ public class ItemServiceImpl implements ItemService{
 	public Item loadItem(int id) {
 		Connection connection = null;
 	    PreparedStatement statement = null;
+	    ResultSet rs = null;
+	    String query = "SELECT * FROM ITEM WHERE ID = ?";
 		try {
 		    connection =  dataSource.getConnection();
-			String query = "SELECT * FROM ITEM WHERE ID = ?";
+			
 		    statement = connection.prepareStatement(query);
 			
 		    statement.setInt(1, id);
 		    
-			ResultSet rs = statement.executeQuery();
+		    rs = statement.executeQuery();
 			
 			if(rs.next()) {
 				return new Item(
@@ -169,33 +133,22 @@ public class ItemServiceImpl implements ItemService{
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}finally {
-	        if (statement != null) {
-	            try {
-	                statement.close();
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	        if (connection != null) {
-	            try {
-	                connection.close();
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            } 
-	        }
+			JdbcUtil.close(connection, statement,rs);
 	    }
 		return null;
 	}
 
 	@Override
 	public List<Item> loadItems() {
+		Connection connection = null;
+	    PreparedStatement statement = null;
+	    ResultSet rs = null;
+	    String query = "SELECT * FROM ITEM ORDER BY ID";
+	    List<Item> items = new ArrayList<Item>();
 		try {
-			Connection connection =  dataSource.getConnection();
-			String query = "SELECT * FROM ITEM ORDER BY ID";
-			Statement statement = connection.createStatement();
-			ResultSet rs = statement.executeQuery(query);
-			
-			List<Item> items = new ArrayList<Item>();
+			connection =  dataSource.getConnection();
+		    statement    = connection.prepareStatement(query);
+		    rs = statement.executeQuery();
 			
 			while(rs.next()) {
 				Item item = new Item(
@@ -212,7 +165,9 @@ public class ItemServiceImpl implements ItemService{
 			
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
-		}
+		}finally {
+			JdbcUtil.close(connection, statement,rs);
+	    }
 		return null;
 	}
 

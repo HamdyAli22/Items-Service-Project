@@ -25,14 +25,14 @@
         <label>Name</label>
       </div>
       <div class="input-data">
-        <input type="text" required name="itemPrice" value="${itemData.price}">
+        <input type="number" required name="itemPrice" min="1" step="1" value="${itemData.price}">
         <div class="underline"></div>
         <label>PRICE</label>
       </div>
     </div>
     <div class="form-row">
       <div class="input-data">
-        <input type="text" required name="itemTotalNumber" value="${itemData.totalNumber}">
+        <input type="number" required name="itemTotalNumber" min="1" step="1" value="${itemData.totalNumber}">
         <div class="underline"></div>
         <label>TOTAL_NUMBER</label>
       </div>
