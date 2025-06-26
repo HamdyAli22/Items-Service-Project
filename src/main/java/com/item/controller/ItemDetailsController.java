@@ -1,8 +1,6 @@
 package com.item.controller;
 
 import java.io.IOException;
-//import java.util.Objects;
-
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,11 +8,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
-
 import com.item.model.ItemDetails;
 import com.item.service.ItemDetailsService;
 import com.item.service.impl.ItemDetailsServiceImpl;
-
 
 
 
@@ -113,7 +109,6 @@ public class ItemDetailsController extends HttpServlet {
 		
 	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

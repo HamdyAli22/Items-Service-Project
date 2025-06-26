@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,9 +12,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
-
 import com.item.service.impl.ItemDetailsServiceImpl;
 import com.item.service.impl.ItemServiceImpl;
+import com.item.util.AuthUtil;
 import com.item.model.Item;
 import com.item.model.ItemDetails;
 import com.item.service.ItemDetailsService;
@@ -45,6 +44,10 @@ public class ItemController extends HttpServlet {
     }
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		if (!AuthUtil.ensureUserLoggedIn(request, response, dataSource)) {
+	        return;
+	    }
 		
      String userAction = request.getParameter("action");
 		

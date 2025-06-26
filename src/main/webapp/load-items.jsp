@@ -12,6 +12,13 @@
     <link rel="stylesheet" href="css/show-items.css">
 </head>
 <body>
+
+<!-- Logout button -->
+<form class="logout-form" action="UserAccountController" method="post">
+    <input type="hidden" name="action" value="logout">
+    <button type="submit">Logout</button>
+</form>
+
 <div class="layer">
     <table>
         <h1>Items</h1>
@@ -28,36 +35,29 @@
         <% 
         List<Item> items = (List<Item>) request.getAttribute("itemsData");
         Map<Integer, Boolean> itemDetailsMap = (Map<Integer, Boolean>) request.getAttribute("itemDetailsMap");
-        %>
-        <%
         for(Item item : items){
-        	 boolean hasDetails = itemDetailsMap.getOrDefault(item.getId(), false);
+            boolean hasDetails = itemDetailsMap.getOrDefault(item.getId(), false);
         %>
-          <tr>
+        <tr>
             <td><strong><%= item.getId() %></strong></td>
             <td><%= item.getName() %></td>
             <td><%= item.getPrice() %></td>
-            <td><%=item.getTotalNumber() %></td>
+            <td><%= item.getTotalNumber() %></td>
             <td>
                 <a href='ItemController?action=load-item&id=<%= item.getId() %>'>Update</a>
                 <a href='ItemController?action=remove-item&id=<%= item.getId() %>'>Delete</a>
                 <% if (!hasDetails) { %>
-                <a href='add-item-details.jsp?id=<%= item.getId() %>'>Add Item Details</a>
-            <% } else { %>
-                 <a href='ItemDetailsController?action=load-details&id=<%= item.getId() %>'>Show Item Details</a>
-            <% } %>
+                    <a href='add-item-details.jsp?id=<%= item.getId() %>'>Add Item Details</a>
+                <% } else { %>
+                    <a href='ItemDetailsController?action=load-details&id=<%= item.getId() %>'>Show Item Details</a>
+                <% } %>
             </td>
         </tr>
-        <%
-        }
-        %>
+        <% } %>
         </tbody>
     </table>
 
-
-    <button class="f"><a href="add-item.html" >Add Item</a></button>
-
-
+    <button class="f"><a href="add-item.html">Add Item</a></button>
 </div>
 
 </body>
